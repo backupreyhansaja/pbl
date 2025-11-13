@@ -23,11 +23,11 @@
         }
         
         .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: blue;
         }
         
         .gradient-text {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: blue;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -71,7 +71,7 @@
             height: 2px;
             bottom: -5px;
             left: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: blue;
             transition: all 0.3s ease;
             transform: translateX(-50%);
         }
@@ -81,7 +81,7 @@
         }
         
         .blob {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: blue;
             filter: blur(40px);
             opacity: 0.5;
             animation: blob 7s infinite;

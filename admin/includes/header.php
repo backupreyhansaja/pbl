@@ -12,10 +12,10 @@
             font-family: 'Poppins', sans-serif;
         }
         .gradient-bg {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: blue;
         }
         .sidebar-active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: blue;
             color: white;
         }
         /* Mobile Menu Animation */

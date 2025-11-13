@@ -146,7 +146,7 @@ include 'includes/header.php';
                     Batal
                 </a>
             <?php endif; ?>
-            <button type="submit" class="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg hover:shadow-lg transition">
+            <button type="submit" class="px-6 py-2 text-white rounded-lg hover:shadow-lg transition" style="background-color : blue">
                 <i class="fas fa-save mr-2"></i><?php echo $editData ? 'Update' : 'Simpan'; ?>
             </button>
         </div>
@@ -157,7 +157,7 @@ include 'includes/header.php';
 <div class="bg-white rounded-xl shadow-md overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full">
-            <thead class="bg-gradient-to-r from-purple-600 to-blue-600 text-white">
+            <thead class="text-white"  style="background-color : blue">
                 <tr>
                     <th class="px-6 py-3 text-left">Urutan</th>
                     <th class="px-6 py-3 text-left">Foto</th>

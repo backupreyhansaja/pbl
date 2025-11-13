@@ -16,7 +16,7 @@ include 'includes/header.php';
 ?>
 
 <!-- Welcome Banner -->
-<div class="bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl shadow-lg p-6 md:p-8 mb-6 md:mb-8 text-white">
+<div class="rounded-xl shadow-lg p-6 md:p-8 mb-6 md:mb-8 text-white" style="background-color : blue">
     <div class="flex flex-col md:flex-row items-start md:items-center justify-between">
         <div class="mb-4 md:mb-0">
             <h2 class="text-2xl md:text-3xl font-bold mb-2">Selamat Datang, Admin! 👋</h2>
@@ -98,7 +98,7 @@ include 'includes/header.php';
     <!-- Messages Card -->
     <div class="bg-white rounded-xl shadow-md p-4 md:p-6 hover:shadow-lg transition transform hover:scale-105 duration-200">
         <div class="flex items-center justify-between mb-3 md:mb-4">
-            <div class="flex-1 min-w-0">
+            <div class="flex-1 min-w-0">    
                 <p class="text-gray-600 text-xs md:text-sm mb-1 truncate">Pesan Baru</p>
                 <h3 class="text-2xl md:text-3xl font-bold text-gray-800"><?php echo $messagesCount; ?></h3>
             </div>

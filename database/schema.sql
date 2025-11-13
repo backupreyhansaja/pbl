@@ -116,6 +116,8 @@ INSERT INTO Berita (judul, isi, deskripsi, gambar, kategori, tanggal) VALUES
 -- Insert default admin user (password: admin123)
 INSERT INTO admin_users (username, password, email, full_name) 
 VALUES ('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin@lab.ac.id', 'Administrator');
+INSERT INTO admin_users (username, password, email, full_name) 
+VALUES ('admin123', '$2y$12$tA01BRJ2AB/Fcok2ZdSpneExLlriCWESIYM3dLhpu/22uWbdka0ry', 'admin123@lab.ac.id', 'Administrator');
 
 -- Insert default visi misi
 INSERT INTO visi_misi (visi, misi) VALUES (
