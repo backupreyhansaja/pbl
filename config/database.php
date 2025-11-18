@@ -1,10 +1,10 @@
 <?php
 // Database Configuration
-define('DB_HOST', 'localhost');
+define('DB_HOST', 'postgres');
 define('DB_PORT', '5432');
 define('DB_NAME', 'lab_kampus');
-define('DB_USER', 'postgres');
-define('DB_PASS', 'root');
+define('DB_USER', 'user');
+define('DB_PASS', '12345');
 
 class Database {
     private $conn;
