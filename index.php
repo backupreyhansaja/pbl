@@ -346,7 +346,7 @@ include 'includes/header.php';
                                 <?php endif; ?>
                             </div>
                             <h4 class="font-bold text-xl mb-3 text-gray-800 line-clamp-2"><?php echo htmlspecialchars($item['judul']); ?></h4>
-                            <p class="text-gray-600 text-sm mb-4 line-clamp-3"><?php echo htmlspecialchars($item['isi'] ?? $item['deskripsi'] ?? ''); ?></p>
+                            <p class="text-gray-600 text-sm mb-4 line-clamp-3"><?php echo($item['isi'] ?? $item['deskripsi'] ?? ''); ?></p>
                             <a href="news_detail.php?id=<?php echo $item['id']; ?>" class="inline-flex items-center text-purple-600 font-semibold hover:text-purple-700 transition">
                                 Baca Selengkapnya <i class="fas fa-arrow-right ml-2"></i>
                             </a>
