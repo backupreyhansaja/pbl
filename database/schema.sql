@@ -107,6 +107,26 @@ CREATE TABLE Berita (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Table Scope
+CREATE TABLE scope (
+    id SERIAL PRIMARY KEY,
+    judul VARCHAR(255) NOT NULL,
+    gambar VARCHAR(255) NOT NULL,
+    deskripsi TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- Table Blueprint
+CREATE TABLE blueprint (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    image VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Contoh data untuk testing
 INSERT INTO Berita (judul, isi, deskripsi, gambar, kategori, tanggal) VALUES
 ('Pembukaan Laboratorium Baru', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Laboratorium baru telah dibuka dengan fasilitas lengkap.', 'Laboratorium baru dengan fasilitas modern', NULL, 'Pengumuman', CURRENT_DATE),
