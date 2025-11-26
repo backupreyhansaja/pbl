@@ -25,6 +25,11 @@ $news = $db->fetchAll($newsResult);
 $galleryResult = $db->query("SELECT * FROM gallery ORDER BY created_at DESC LIMIT 9");
 $gallery = $db->fetchAll($galleryResult);
 
+//Get Scope
+$scopeResult = $db->query("SELECT * FROM scope ORDER BY urutan ASC, id ASC");
+$scope = $db->fetchAll($scopeResult);
+
+
 include 'includes/header.php';
 ?>
 
@@ -150,130 +155,95 @@ include 'includes/header.php';
             <div class="w-24 h-1 gradient-bg mx-auto rounded-full"></div>
             <p class="text-gray-600 mt-4">Ruang Lingkup Penelitian dan Pengembangan</p>
         </div>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <!-- Information System & Automation -->
-            <div class="group bg-gradient-to-br from-blue-50 to-purple-50 p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-purple-300" data-aos="fade-up" data-aos-delay="0">
-                <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-purple-500 to-blue-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <i class="fas fa-desktop text-white text-3xl"></i>
+
+            <?php if ($scope && count($scope) > 0): ?>
+                <?php foreach ($scope as $index => $item): ?>
+                    <div class="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border-l-4"
+                         style="border-color: <?php echo htmlspecialchars($item['color'] ?? '#6C5CE7'); ?>;"
+                         data-aos="fade-up" data-aos-delay="<?php echo $index * 100; ?>">
+
+                        <div class="w-20 h-20 mx-auto mb-6 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-all duration-300"
+                             style="background: <?php echo htmlspecialchars($item['color'] ?? '#6C5CE7'); ?>;">
+                            <i class="<?php echo htmlspecialchars($item['icon']); ?> text-white text-3xl"></i>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">
+                            <?php echo htmlspecialchars($item['title']); ?>
+                        </h3>
+
+                        <p class="text-gray-600 text-center leading-relaxed">
+                            <?php echo htmlspecialchars($item['description']); ?>
+                        </p>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="col-span-full text-center py-12">
+                    <i class="fas fa-info-circle text-gray-300 text-6xl mb-4"></i>
+                    <p class="text-gray-500 text-lg">Belum ada data SCOPE</p>
                 </div>
-                <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">Information System & Automation</h3>
-                <p class="text-gray-600 text-center leading-relaxed">Building information systems to support organizational management, business, health, and education.</p>
-            </div>
-            
-            <!-- Artificial Intelligence -->
-            <div class="group bg-gradient-to-br from-purple-50 to-pink-50 p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-purple-300" data-aos="fade-up" data-aos-delay="100">
-                <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-purple-600 to-pink-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <i class="fas fa-brain text-white text-3xl"></i>
-                </div>
-                <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">Artificial Intelligence</h3>
-                <p class="text-gray-600 text-center leading-relaxed">Analyze data, create machine learning models, and develop intelligent systems that can assist decision-making.</p>
-            </div>
-            
-            <!-- Application Development -->
-            <div class="group bg-gradient-to-br from-green-50 to-teal-50 p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-purple-300" data-aos="fade-up" data-aos-delay="200">
-                <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-green-500 to-teal-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <i class="fas fa-mobile-alt text-white text-3xl"></i>
-                </div>
-                <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">Application Development</h3>
-                <p class="text-gray-600 text-center leading-relaxed">Designing and building desktop, web, and mobile applications for industrial and academic needs.</p>
-            </div>
-            
-            <!-- Internet Of Things & Applied Technologies -->
-            <div class="group bg-gradient-to-br from-cyan-50 to-blue-50 p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-purple-300" data-aos="fade-up" data-aos-delay="300">
-                <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <i class="fas fa-microchip text-white text-3xl"></i>
-                </div>
-                <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">Internet Of Things & Applied Technologies</h3>
-                <p class="text-gray-600 text-center leading-relaxed">Integrating hardware and software to produce intelligent solutions in manufacturing, agriculture, transportation, and the environment.</p>
-            </div>
-            
-            <!-- Research & Collaboration -->
-            <div class="group bg-gradient-to-br from-orange-50 to-red-50 p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border-2 border-transparent hover:border-purple-300 md:col-span-2 lg:col-span-1" data-aos="fade-up" data-aos-delay="400">
-                <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <i class="fas fa-handshake text-white text-3xl"></i>
-                </div>
-                <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">Research & Collaboration</h3>
-                <p class="text-gray-600 text-center leading-relaxed">Conducting multidisciplinary research and collaborating with various parties.</p>
-            </div>
+            <?php endif; ?>
+
         </div>
     </div>
 </section>
 
+
 <!-- BLUEPRINT Section -->
 <section id="blueprint" class="py-20 bg-gray-50">
     <div class="container mx-auto px-6">
+
         <div class="text-center mb-16" data-aos="fade-up">
-            <h2 class="text-4xl md:text-5xl font-bold gradient-text mb-4">BLUEPRINT</h2>
+            <h2 class="text-4xl md:text-5xl font-bold gradient-text mb-4">Blueprint</h2>
             <div class="w-24 h-1 gradient-bg mx-auto rounded-full"></div>
             <p class="text-gray-600 mt-4">Cetak Biru Pengembangan Teknologi</p>
         </div>
-        
-        <div class="max-w-6xl mx-auto">
-            <!-- Blueprint Circular Layout -->
-            <div class="relative" data-aos="zoom-in">
-                
-                <!-- Items Container -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-8">
-                    <!-- Education Technology -->
-                    <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border-l-4 border-purple-500 hover:scale-105" data-aos="fade-right" data-aos-delay="0">
-                        <div class="flex items-center mb-4">
-                            <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center mr-4">
-                                <i class="fas fa-graduation-cap text-white text-xl"></i>
-                            </div>
-                            <h4 class="text-lg font-bold text-gray-800">Education Technology</h4>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+
+            <?php 
+            $blueprintResult = $db->query("SELECT * FROM blueprint ORDER BY urutan ASC, id ASC");
+            $blueprints = $db->fetchAll($blueprintResult);
+            ?>
+
+            <?php if ($blueprints && count($blueprints) > 0): ?>
+                <?php foreach ($blueprints as $index => $bp): ?>
+                    <div class="group bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border-l-4 hover:scale-105"
+                         style="border-color: <?= htmlspecialchars($bp['color'] ?? '#6C5CE7'); ?>;"
+                         data-aos="fade-up"
+                         data-aos-delay="<?= $index * 120; ?>">
+
+                        <!-- ICON -->
+                        <div class="w-20 h-20 mx-auto mb-6 rounded-2xl flex items-center justify-center transform group-hover:scale-110 transition-all duration-300"
+                             style="background: <?= htmlspecialchars($bp['color'] ?? '#6C5CE7'); ?>;">
+                            <i class="<?= htmlspecialchars($bp['icon']); ?> text-white text-3xl"></i>
                         </div>
-                        <p class="text-gray-600 text-sm">Automated assistance, auto-grading, software testing, gamification, simulations, and learning methodology</p>
+
+                        <!-- TITLE -->
+                        <h3 class="text-xl font-bold text-gray-800 mb-4 text-center">
+                            <?= htmlspecialchars($bp['title']); ?>
+                        </h3>
+
+                        <!-- DESCRIPTION -->
+                        <p class="text-gray-600 text-center leading-relaxed">
+                            <?= htmlspecialchars($bp['description']); ?>
+                        </p>
+
                     </div>
-                    
-                    <!-- Smart Farming -->
-                    <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border-l-4 border-green-500 hover:scale-105" data-aos="fade-up" data-aos-delay="100">
-                        <div class="flex items-center mb-4">
-                            <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-teal-500 rounded-full flex items-center justify-center mr-4">
-                                <i class="fas fa-leaf text-white text-xl"></i>
-                            </div>
-                            <h4 class="text-lg font-bold text-gray-800">Smart Farming</h4>
-                        </div>
-                        <p class="text-gray-600 text-sm">IoT, sensors, data analysis, computer vision, and artificial intelligence</p>
-                    </div>
-                    
-                    <!-- Information Security -->
-                    <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border-l-4 border-blue-500 hover:scale-105" data-aos="fade-left" data-aos-delay="200">
-                        <div class="flex items-center mb-4">
-                            <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mr-4">
-                                <i class="fas fa-shield-alt text-white text-xl"></i>
-                            </div>
-                            <h4 class="text-lg font-bold text-gray-800">Information Security</h4>
-                        </div>
-                        <p class="text-gray-600 text-sm">SIEM and EEG-based data analysis for threat detection and cognitive-based security</p>
-                    </div>
-                    
-                    <!-- Distributed Technology (Defense) -->
-                    <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border-l-4 border-red-500 hover:scale-105" data-aos="fade-right" data-aos-delay="300">
-                        <div class="flex items-center mb-4">
-                            <div class="w-14 h-14 bg-gradient-to-br from-red-500 to-pink-500 rounded-full flex items-center justify-center mr-4">
-                                <i class="fas fa-network-wired text-white text-xl"></i>
-                            </div>
-                            <h4 class="text-lg font-bold text-gray-800">Distributed Technology (Defense)</h4>
-                        </div>
-                        <p class="text-gray-600 text-sm">Distributed architecture for security, reliability, collaboration, and risk mitigation</p>
-                    </div>
-                    
-                    <!-- Financial Technology (Fintech) -->
-                    <div class="bg-white p-6 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 border-l-4 border-yellow-500 hover:scale-105 md:col-span-2 lg:col-span-1" data-aos="fade-up" data-aos-delay="400">
-                        <div class="flex items-center mb-4">
-                            <div class="w-14 h-14 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-full flex items-center justify-center mr-4">
-                                <i class="fas fa-coins text-white text-xl"></i>
-                            </div>
-                            <h4 class="text-lg font-bold text-gray-800">Financial Technology (Fintech)</h4>
-                        </div>
-                        <p class="text-gray-600 text-sm">IoT, cloud computing, and data analytics for real-time monitoring and diagnosis</p>
-                    </div>
+                <?php endforeach; ?>
+
+            <?php else: ?>
+                <div class="col-span-full text-center py-12">
+                    <i class="fas fa-diagram-project text-gray-300 text-6xl mb-4"></i>
+                    <p class="text-gray-500 text-lg">Belum ada data blueprint</p>
                 </div>
-            </div>
+            <?php endif; ?>
+
         </div>
     </div>
 </section>
+
 
 <!-- Struktur Organisasi Section -->
 <section id="struktur" class="py-20 bg-white">

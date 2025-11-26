@@ -383,6 +383,34 @@ CREATE TABLE public.visi_misi (
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
 );
 
+<<<<<<< HEAD
+=======
+-- Table Scope
+CREATE TABLE public.scope (
+    id SERIAL PRIMARY KEY,
+    judul VARCHAR(255) NOT NULL,
+    gambar VARCHAR(255) NOT NULL,
+    deskripsi TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- Table Blueprint
+CREATE TABLE public.blueprint (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    image VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Contoh data untuk testing
+INSERT INTO Berita (judul, isi, deskripsi, gambar, kategori, tanggal) VALUES
+('Pembukaan Laboratorium Baru', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Laboratorium baru telah dibuka dengan fasilitas lengkap.', 'Laboratorium baru dengan fasilitas modern', NULL, 'Pengumuman', CURRENT_DATE),
+('Workshop Web Development', 'Workshop tentang web development akan diadakan minggu depan. Daftar segera!', 'Workshop gratis untuk mahasiswa', NULL, 'Event', CURRENT_DATE - INTERVAL ''5 days''),
+('Pelatihan AI dan Machine Learning', 'Pelatihan intensif mengenai kecerdasan buatan dan machine learning untuk mahasiswa tingkat akhir.', 'Pelatihan AI selama 2 minggu', NULL, 'Pelatihan', CURRENT_DATE - INTERVAL ''10 days'');
+>>>>>>> 790b2fa981fe638f70a99b408e571937012a8d06
 
 ALTER TABLE public.visi_misi OWNER TO postgres;
 
