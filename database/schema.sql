@@ -341,6 +341,46 @@ CREATE TABLE public.struktur_organisasi (
     urutan integer DEFAULT 0,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+-- Table Scope
+CREATE TABLE scope (
+    id SERIAL PRIMARY KEY,
+    judul VARCHAR(255) NOT NULL,
+    gambar VARCHAR(255) NOT NULL,
+    deskripsi TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- Table Blueprint
+CREATE TABLE blueprint (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    image VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Contoh data untuk testing
+INSERT INTO Berita (judul, isi, deskripsi, gambar, kategori, tanggal) VALUES
+('Pembukaan Laboratorium Baru', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Laboratorium baru telah dibuka dengan fasilitas lengkap.', 'Laboratorium baru dengan fasilitas modern', NULL, 'Pengumuman', CURRENT_DATE),
+('Workshop Web Development', 'Workshop tentang web development akan diadakan minggu depan. Daftar segera!', 'Workshop gratis untuk mahasiswa', NULL, 'Event', CURRENT_DATE - INTERVAL ''5 days''),
+('Pelatihan AI dan Machine Learning', 'Pelatihan intensif mengenai kecerdasan buatan dan machine learning untuk mahasiswa tingkat akhir.', 'Pelatihan AI selama 2 minggu', NULL, 'Pelatihan', CURRENT_DATE - INTERVAL ''10 days'');
+
+-- Insert default admin user (password: admin123)
+INSERT INTO admin_users (username, password, email, full_name) 
+VALUES ('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin@lab.ac.id', 'Administrator');
+INSERT INTO admin_users (username, password, email, full_name) 
+VALUES ('admin123', '$2y$12$tA01BRJ2AB/Fcok2ZdSpneExLlriCWESIYM3dLhpu/22uWbdka0ry', 'admin123@lab.ac.id', 'Administrator');
+
+-- Insert default visi misi
+INSERT INTO visi_misi (visi, misi) VALUES (
+    'Menjadi laboratorium unggulan yang menghasilkan penelitian dan inovasi berkualitas tinggi dalam bidang teknologi informasi.',
+    '1. Menyediakan fasilitas laboratorium yang modern dan lengkap
+2. Mendukung kegiatan penelitian mahasiswa dan dosen
+3. Mengembangkan inovasi teknologi yang bermanfaat bagi masyarakat
+4. Menjalin kerjasama dengan industri dan institusi lain
+5. Meningkatkan kompetensi SDM di bidang teknologi informasi'
 );
 
 

@@ -15,7 +15,7 @@ class Database {
             
             if (!$this->conn) {
                 throw new Exception("Connection failed: " . pg_last_error());
-            }   
+            }
         } catch (Exception $e) {
             die("Database connection error: " . $e->getMessage());
         }
