@@ -4,7 +4,7 @@ define('DB_HOST', 'localhost');
 define('DB_PORT', '5432');
 define('DB_NAME', 'lab_kampus');
 define('DB_USER', 'postgres');
-define('DB_PASS', '1234');
+define('DB_PASS', '12345678');
 
 class Database {
     private $conn;
@@ -15,7 +15,7 @@ class Database {
             
             if (!$this->conn) {
                 throw new Exception("Connection failed: " . pg_last_error());
-            }   
+            }
         } catch (Exception $e) {
             die("Database connection error: " . $e->getMessage());
         }
