@@ -141,12 +141,12 @@ include 'includes/header.php';
                    class="w-20 h-10 border rounded">
         </div>
 
-        <div class="mb-4">
+        <!-- <div class="mb-4">
             <label class="block mb-2 font-semibold text-gray-700">Urutan</label>
             <input type="number" name="urutan"
                    value="<?= htmlspecialchars($editData['urutan'] ?? 0) ?>"
                    class="w-full px-4 py-2 border rounded-lg">
-        </div>
+        </div> -->
 
         <div class="flex justify-end space-x-2">
             <?php if ($editData): ?>

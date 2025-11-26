@@ -136,19 +136,18 @@ include 'includes/header.php';
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             <div>
-                <label class="font-semibold">Warna (Hex)</label>
-                <input type="text" name="color" 
-                       placeholder="#6C5CE7"
-                       value="<?= htmlspecialchars($editData['color'] ?? '') ?>"
-                       class="w-full p-2 border rounded-lg">
+                <label class="font-semibold">Warna (Hex)</label> <br>
+                <input type="color" name="color"
+                   value="<?= htmlspecialchars($editData['color'] ?? '#6C5CE7') ?>"
+                   class="w-20 h-10 border rounded">
             </div>
 
-            <div>
+            <!-- <div>
                 <label class="font-semibold">Urutan</label>
                 <input type="number" name="urutan"
                        value="<?= htmlspecialchars($editData['urutan'] ?? 0) ?>"
                        class="w-full p-2 border rounded-lg">
-            </div>
+            </div> -->
         </div>
 
         <div class="flex justify-end">
