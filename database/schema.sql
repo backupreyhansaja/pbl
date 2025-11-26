@@ -2,12 +2,12 @@
 -- PostgreSQL database dump
 --
 
-\restrict LhlE6bco3e9jRTVdgd71cMRE9wmfQfG25zfGDlEHfejfIQyuYy3J2WxTMxdgJod
+\restrict aW4HN1Md706riHhUsMWTCVP22MYu5iNCyVgbUMWXscNAemi2O4QNZhki9AnlUHA
 
 -- Dumped from database version 15.14
 -- Dumped by pg_dump version 15.14
 
--- Started on 2025-11-25 23:54:41
+-- Started on 2025-11-26 18:55:21
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -59,7 +59,7 @@ CREATE SEQUENCE public.admin_users_id_seq
 ALTER TABLE public.admin_users_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3427 (class 0 OID 0)
+-- TOC entry 3455 (class 0 OID 0)
 -- Dependencies: 214
 -- Name: admin_users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -105,12 +105,57 @@ CREATE SEQUENCE public.berita_id_seq
 ALTER TABLE public.berita_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3428 (class 0 OID 0)
+-- TOC entry 3456 (class 0 OID 0)
 -- Dependencies: 230
 -- Name: berita_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE public.berita_id_seq OWNED BY public.berita.id;
+
+
+--
+-- TOC entry 233 (class 1259 OID 17953)
+-- Name: blueprint; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.blueprint (
+    id integer NOT NULL,
+    title character varying(150) NOT NULL,
+    description text NOT NULL,
+    icon character varying(255) NOT NULL,
+    color character varying(50),
+    urutan integer DEFAULT 0,
+    uploaded_by integer,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE public.blueprint OWNER TO postgres;
+
+--
+-- TOC entry 232 (class 1259 OID 17952)
+-- Name: blueprint_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.blueprint_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.blueprint_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3457 (class 0 OID 0)
+-- Dependencies: 232
+-- Name: blueprint_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.blueprint_id_seq OWNED BY public.blueprint.id;
 
 
 --
@@ -148,7 +193,7 @@ CREATE SEQUENCE public.contact_messages_id_seq
 ALTER TABLE public.contact_messages_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3429 (class 0 OID 0)
+-- TOC entry 3458 (class 0 OID 0)
 -- Dependencies: 228
 -- Name: contact_messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -191,7 +236,7 @@ CREATE SEQUENCE public.gallery_id_seq
 ALTER TABLE public.gallery_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3430 (class 0 OID 0)
+-- TOC entry 3459 (class 0 OID 0)
 -- Dependencies: 226
 -- Name: gallery_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -236,12 +281,57 @@ CREATE SEQUENCE public.mahasiswa_id_seq
 ALTER TABLE public.mahasiswa_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3431 (class 0 OID 0)
+-- TOC entry 3460 (class 0 OID 0)
 -- Dependencies: 224
 -- Name: mahasiswa_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE public.mahasiswa_id_seq OWNED BY public.mahasiswa.id;
+
+
+--
+-- TOC entry 235 (class 1259 OID 17970)
+-- Name: scope; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.scope (
+    id integer NOT NULL,
+    title character varying(150) NOT NULL,
+    description text NOT NULL,
+    icon character varying(255) NOT NULL,
+    color character varying(50),
+    urutan integer DEFAULT 0,
+    uploaded_by integer,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE public.scope OWNER TO postgres;
+
+--
+-- TOC entry 234 (class 1259 OID 17969)
+-- Name: scope_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.scope_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.scope_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 3461 (class 0 OID 0)
+-- Dependencies: 234
+-- Name: scope_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.scope_id_seq OWNED BY public.scope.id;
 
 
 --
@@ -275,7 +365,7 @@ CREATE SEQUENCE public.sejarah_id_seq
 ALTER TABLE public.sejarah_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3432 (class 0 OID 0)
+-- TOC entry 3462 (class 0 OID 0)
 -- Dependencies: 218
 -- Name: sejarah_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -320,7 +410,7 @@ CREATE SEQUENCE public.staff_id_seq
 ALTER TABLE public.staff_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3433 (class 0 OID 0)
+-- TOC entry 3463 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: staff_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -363,7 +453,7 @@ CREATE SEQUENCE public.struktur_organisasi_id_seq
 ALTER TABLE public.struktur_organisasi_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3434 (class 0 OID 0)
+-- TOC entry 3464 (class 0 OID 0)
 -- Dependencies: 220
 -- Name: struktur_organisasi_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -383,34 +473,6 @@ CREATE TABLE public.visi_misi (
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
 );
 
-<<<<<<< HEAD
-=======
--- Table Scope
-CREATE TABLE public.scope (
-    id SERIAL PRIMARY KEY,
-    judul VARCHAR(255) NOT NULL,
-    gambar VARCHAR(255) NOT NULL,
-    deskripsi TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-
--- Table Blueprint
-CREATE TABLE public.blueprint (
-    id SERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    description TEXT NOT NULL,
-    image VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Contoh data untuk testing
-INSERT INTO Berita (judul, isi, deskripsi, gambar, kategori, tanggal) VALUES
-('Pembukaan Laboratorium Baru', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Laboratorium baru telah dibuka dengan fasilitas lengkap.', 'Laboratorium baru dengan fasilitas modern', NULL, 'Pengumuman', CURRENT_DATE),
-('Workshop Web Development', 'Workshop tentang web development akan diadakan minggu depan. Daftar segera!', 'Workshop gratis untuk mahasiswa', NULL, 'Event', CURRENT_DATE - INTERVAL ''5 days''),
-('Pelatihan AI dan Machine Learning', 'Pelatihan intensif mengenai kecerdasan buatan dan machine learning untuk mahasiswa tingkat akhir.', 'Pelatihan AI selama 2 minggu', NULL, 'Pelatihan', CURRENT_DATE - INTERVAL ''10 days'');
->>>>>>> 790b2fa981fe638f70a99b408e571937012a8d06
 
 ALTER TABLE public.visi_misi OWNER TO postgres;
 
@@ -431,7 +493,7 @@ CREATE SEQUENCE public.visi_misi_id_seq
 ALTER TABLE public.visi_misi_id_seq OWNER TO postgres;
 
 --
--- TOC entry 3435 (class 0 OID 0)
+-- TOC entry 3465 (class 0 OID 0)
 -- Dependencies: 216
 -- Name: visi_misi_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
@@ -440,7 +502,7 @@ ALTER SEQUENCE public.visi_misi_id_seq OWNED BY public.visi_misi.id;
 
 
 --
--- TOC entry 3213 (class 2604 OID 17872)
+-- TOC entry 3223 (class 2604 OID 17919)
 -- Name: admin_users id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -448,7 +510,7 @@ ALTER TABLE ONLY public.admin_users ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
--- TOC entry 3236 (class 2604 OID 17873)
+-- TOC entry 3246 (class 2604 OID 17920)
 -- Name: berita id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -456,7 +518,15 @@ ALTER TABLE ONLY public.berita ALTER COLUMN id SET DEFAULT nextval('public.berit
 
 
 --
--- TOC entry 3233 (class 2604 OID 17874)
+-- TOC entry 3249 (class 2604 OID 17956)
+-- Name: blueprint id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blueprint ALTER COLUMN id SET DEFAULT nextval('public.blueprint_id_seq'::regclass);
+
+
+--
+-- TOC entry 3243 (class 2604 OID 17921)
 -- Name: contact_messages id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -464,7 +534,7 @@ ALTER TABLE ONLY public.contact_messages ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
--- TOC entry 3230 (class 2604 OID 17875)
+-- TOC entry 3240 (class 2604 OID 17922)
 -- Name: gallery id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -472,7 +542,7 @@ ALTER TABLE ONLY public.gallery ALTER COLUMN id SET DEFAULT nextval('public.gall
 
 
 --
--- TOC entry 3227 (class 2604 OID 17876)
+-- TOC entry 3237 (class 2604 OID 17923)
 -- Name: mahasiswa id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -480,7 +550,15 @@ ALTER TABLE ONLY public.mahasiswa ALTER COLUMN id SET DEFAULT nextval('public.ma
 
 
 --
--- TOC entry 3218 (class 2604 OID 17877)
+-- TOC entry 3253 (class 2604 OID 17973)
+-- Name: scope id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.scope ALTER COLUMN id SET DEFAULT nextval('public.scope_id_seq'::regclass);
+
+
+--
+-- TOC entry 3228 (class 2604 OID 17924)
 -- Name: sejarah id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -488,7 +566,7 @@ ALTER TABLE ONLY public.sejarah ALTER COLUMN id SET DEFAULT nextval('public.seja
 
 
 --
--- TOC entry 3224 (class 2604 OID 17878)
+-- TOC entry 3234 (class 2604 OID 17925)
 -- Name: staff id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -496,7 +574,7 @@ ALTER TABLE ONLY public.staff ALTER COLUMN id SET DEFAULT nextval('public.staff_
 
 
 --
--- TOC entry 3220 (class 2604 OID 17879)
+-- TOC entry 3230 (class 2604 OID 17926)
 -- Name: struktur_organisasi id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -504,7 +582,7 @@ ALTER TABLE ONLY public.struktur_organisasi ALTER COLUMN id SET DEFAULT nextval(
 
 
 --
--- TOC entry 3216 (class 2604 OID 17880)
+-- TOC entry 3226 (class 2604 OID 17927)
 -- Name: visi_misi id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -512,7 +590,7 @@ ALTER TABLE ONLY public.visi_misi ALTER COLUMN id SET DEFAULT nextval('public.vi
 
 
 --
--- TOC entry 3405 (class 0 OID 17768)
+-- TOC entry 3429 (class 0 OID 17768)
 -- Dependencies: 215
 -- Data for Name: admin_users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -523,7 +601,7 @@ COPY public.admin_users (id, username, password, email, full_name, created_at, u
 
 
 --
--- TOC entry 3421 (class 0 OID 17857)
+-- TOC entry 3445 (class 0 OID 17857)
 -- Dependencies: 231
 -- Data for Name: berita; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -534,7 +612,20 @@ COPY public.berita (id, judul, isi, deskripsi, gambar, kategori, tanggal, create
 
 
 --
--- TOC entry 3419 (class 0 OID 17846)
+-- TOC entry 3447 (class 0 OID 17953)
+-- Dependencies: 233
+-- Data for Name: blueprint; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.blueprint (id, title, description, icon, color, urutan, uploaded_by, created_at, updated_at) FROM stdin;
+1	Education Technology	Automated assistance, auto-grading, software testing, gamification, simulations, and learning methodology	fa-solid fa-graduation-cap	#A66CFF	1	1	2025-11-26 08:39:54.023369	2025-11-26 08:39:54.023369
+2	Smart Farming	IoT, sensors, data analysis, computer vision, and artificial intelligence	fa-solid fa-leaf	#2ecc71	2	1	2025-11-26 08:39:54.023369	2025-11-26 08:39:54.023369
+3	Information Security	SIEM and EEG-based data analysis for threat detection and cognitive-based security	fa-solid fa-shield-halved	#3498db	3	1	2025-11-26 08:39:54.023369	2025-11-26 08:39:54.023369
+\.
+
+
+--
+-- TOC entry 3443 (class 0 OID 17846)
 -- Dependencies: 229
 -- Data for Name: contact_messages; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -545,7 +636,7 @@ COPY public.contact_messages (id, name, email, subject, message, is_read, create
 
 
 --
--- TOC entry 3417 (class 0 OID 17835)
+-- TOC entry 3441 (class 0 OID 17835)
 -- Dependencies: 227
 -- Data for Name: gallery; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -557,7 +648,7 @@ COPY public.gallery (id, title, description, image, tanggal, created_at, updated
 
 
 --
--- TOC entry 3415 (class 0 OID 17824)
+-- TOC entry 3439 (class 0 OID 17824)
 -- Dependencies: 225
 -- Data for Name: mahasiswa; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -567,7 +658,21 @@ COPY public.mahasiswa (id, nama, nim, program_studi, email, phone, foto, created
 
 
 --
--- TOC entry 3409 (class 0 OID 17793)
+-- TOC entry 3449 (class 0 OID 17970)
+-- Dependencies: 235
+-- Data for Name: scope; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.scope (id, title, description, icon, color, urutan, uploaded_by, created_at, updated_at) FROM stdin;
+1	Information System & Automation	Building information systems to support organizational management, business, health, and education.	fa-solid fa-display	#6C5CE7	1	1	2025-11-26 08:39:54.023369	2025-11-26 08:39:54.023369
+3	Application Development	Designing and building desktop, web, and mobile applications for industrial and academic needs.	fa-solid fa-mobile-screen	#00B894	3	1	2025-11-26 08:39:54.023369	2025-11-26 08:39:54.023369
+4	Internet of Things & Applied Technologies	Integrating hardware and software to produce intelligent solutions.	fa-solid fa-microchip	#0984E3	4	1	2025-11-26 08:39:54.023369	2025-11-26 08:39:54.023369
+2	Artificial Intelligence	Analyze data, create machine learning models, and develop intelligent systems for decision-making.	fa-solid fa-book	#E84393	2	1	2025-11-26 08:39:54.023369	2025-11-26 08:46:58.301218
+\.
+
+
+--
+-- TOC entry 3433 (class 0 OID 17793)
 -- Dependencies: 219
 -- Data for Name: sejarah; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -578,7 +683,7 @@ COPY public.sejarah (id, content, updated_at) FROM stdin;
 
 
 --
--- TOC entry 3413 (class 0 OID 17813)
+-- TOC entry 3437 (class 0 OID 17813)
 -- Dependencies: 223
 -- Data for Name: staff; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -588,7 +693,7 @@ COPY public.staff (id, nama, nip, jabatan, email, phone, foto, created_at, updat
 
 
 --
--- TOC entry 3411 (class 0 OID 17803)
+-- TOC entry 3435 (class 0 OID 17803)
 -- Dependencies: 221
 -- Data for Name: struktur_organisasi; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -599,7 +704,7 @@ COPY public.struktur_organisasi (id, jabatan, nama, foto, urutan, created_at, up
 
 
 --
--- TOC entry 3407 (class 0 OID 17783)
+-- TOC entry 3431 (class 0 OID 17783)
 -- Dependencies: 217
 -- Data for Name: visi_misi; Type: TABLE DATA; Schema: public; Owner: postgres
 --
@@ -610,7 +715,7 @@ COPY public.visi_misi (id, visi, misi, updated_at) FROM stdin;
 
 
 --
--- TOC entry 3436 (class 0 OID 0)
+-- TOC entry 3466 (class 0 OID 0)
 -- Dependencies: 214
 -- Name: admin_users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -619,7 +724,7 @@ SELECT pg_catalog.setval('public.admin_users_id_seq', 1, true);
 
 
 --
--- TOC entry 3437 (class 0 OID 0)
+-- TOC entry 3467 (class 0 OID 0)
 -- Dependencies: 230
 -- Name: berita_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -628,7 +733,16 @@ SELECT pg_catalog.setval('public.berita_id_seq', 16, true);
 
 
 --
--- TOC entry 3438 (class 0 OID 0)
+-- TOC entry 3468 (class 0 OID 0)
+-- Dependencies: 232
+-- Name: blueprint_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.blueprint_id_seq', 3, true);
+
+
+--
+-- TOC entry 3469 (class 0 OID 0)
 -- Dependencies: 228
 -- Name: contact_messages_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -637,7 +751,7 @@ SELECT pg_catalog.setval('public.contact_messages_id_seq', 2, true);
 
 
 --
--- TOC entry 3439 (class 0 OID 0)
+-- TOC entry 3470 (class 0 OID 0)
 -- Dependencies: 226
 -- Name: gallery_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -646,7 +760,7 @@ SELECT pg_catalog.setval('public.gallery_id_seq', 4, true);
 
 
 --
--- TOC entry 3440 (class 0 OID 0)
+-- TOC entry 3471 (class 0 OID 0)
 -- Dependencies: 224
 -- Name: mahasiswa_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -655,7 +769,16 @@ SELECT pg_catalog.setval('public.mahasiswa_id_seq', 1, false);
 
 
 --
--- TOC entry 3441 (class 0 OID 0)
+-- TOC entry 3472 (class 0 OID 0)
+-- Dependencies: 234
+-- Name: scope_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.scope_id_seq', 4, true);
+
+
+--
+-- TOC entry 3473 (class 0 OID 0)
 -- Dependencies: 218
 -- Name: sejarah_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -664,7 +787,7 @@ SELECT pg_catalog.setval('public.sejarah_id_seq', 1, true);
 
 
 --
--- TOC entry 3442 (class 0 OID 0)
+-- TOC entry 3474 (class 0 OID 0)
 -- Dependencies: 222
 -- Name: staff_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -673,7 +796,7 @@ SELECT pg_catalog.setval('public.staff_id_seq', 1, false);
 
 
 --
--- TOC entry 3443 (class 0 OID 0)
+-- TOC entry 3475 (class 0 OID 0)
 -- Dependencies: 220
 -- Name: struktur_organisasi_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -682,7 +805,7 @@ SELECT pg_catalog.setval('public.struktur_organisasi_id_seq', 1, true);
 
 
 --
--- TOC entry 3444 (class 0 OID 0)
+-- TOC entry 3476 (class 0 OID 0)
 -- Dependencies: 216
 -- Name: visi_misi_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
@@ -691,7 +814,7 @@ SELECT pg_catalog.setval('public.visi_misi_id_seq', 1, true);
 
 
 --
--- TOC entry 3240 (class 2606 OID 17781)
+-- TOC entry 3258 (class 2606 OID 17781)
 -- Name: admin_users admin_users_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -700,7 +823,7 @@ ALTER TABLE ONLY public.admin_users
 
 
 --
--- TOC entry 3242 (class 2606 OID 17777)
+-- TOC entry 3260 (class 2606 OID 17777)
 -- Name: admin_users admin_users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -709,7 +832,7 @@ ALTER TABLE ONLY public.admin_users
 
 
 --
--- TOC entry 3244 (class 2606 OID 17779)
+-- TOC entry 3262 (class 2606 OID 17779)
 -- Name: admin_users admin_users_username_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -718,7 +841,7 @@ ALTER TABLE ONLY public.admin_users
 
 
 --
--- TOC entry 3260 (class 2606 OID 17866)
+-- TOC entry 3278 (class 2606 OID 17866)
 -- Name: berita berita_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -727,7 +850,16 @@ ALTER TABLE ONLY public.berita
 
 
 --
--- TOC entry 3258 (class 2606 OID 17855)
+-- TOC entry 3280 (class 2606 OID 17963)
+-- Name: blueprint blueprint_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blueprint
+    ADD CONSTRAINT blueprint_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3276 (class 2606 OID 17855)
 -- Name: contact_messages contact_messages_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -736,7 +868,7 @@ ALTER TABLE ONLY public.contact_messages
 
 
 --
--- TOC entry 3256 (class 2606 OID 17844)
+-- TOC entry 3274 (class 2606 OID 17844)
 -- Name: gallery gallery_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -745,7 +877,7 @@ ALTER TABLE ONLY public.gallery
 
 
 --
--- TOC entry 3254 (class 2606 OID 17833)
+-- TOC entry 3272 (class 2606 OID 17833)
 -- Name: mahasiswa mahasiswa_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -754,7 +886,16 @@ ALTER TABLE ONLY public.mahasiswa
 
 
 --
--- TOC entry 3248 (class 2606 OID 17801)
+-- TOC entry 3282 (class 2606 OID 17980)
+-- Name: scope scope_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.scope
+    ADD CONSTRAINT scope_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 3266 (class 2606 OID 17801)
 -- Name: sejarah sejarah_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -763,7 +904,7 @@ ALTER TABLE ONLY public.sejarah
 
 
 --
--- TOC entry 3252 (class 2606 OID 17822)
+-- TOC entry 3270 (class 2606 OID 17822)
 -- Name: staff staff_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -772,7 +913,7 @@ ALTER TABLE ONLY public.staff
 
 
 --
--- TOC entry 3250 (class 2606 OID 17811)
+-- TOC entry 3268 (class 2606 OID 17811)
 -- Name: struktur_organisasi struktur_organisasi_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -781,7 +922,7 @@ ALTER TABLE ONLY public.struktur_organisasi
 
 
 --
--- TOC entry 3246 (class 2606 OID 17791)
+-- TOC entry 3264 (class 2606 OID 17791)
 -- Name: visi_misi visi_misi_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -790,7 +931,7 @@ ALTER TABLE ONLY public.visi_misi
 
 
 --
--- TOC entry 3261 (class 2606 OID 17867)
+-- TOC entry 3283 (class 2606 OID 17867)
 -- Name: berita berita_uploaded_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -798,11 +939,29 @@ ALTER TABLE ONLY public.berita
     ADD CONSTRAINT berita_uploaded_by_fkey FOREIGN KEY (uploaded_by) REFERENCES public.admin_users(id);
 
 
--- Completed on 2025-11-25 23:54:41
+--
+-- TOC entry 3284 (class 2606 OID 17964)
+-- Name: blueprint blueprint_uploaded_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blueprint
+    ADD CONSTRAINT blueprint_uploaded_by_fkey FOREIGN KEY (uploaded_by) REFERENCES public.admin_users(id);
+
+
+--
+-- TOC entry 3285 (class 2606 OID 17981)
+-- Name: scope scope_uploaded_by_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.scope
+    ADD CONSTRAINT scope_uploaded_by_fkey FOREIGN KEY (uploaded_by) REFERENCES public.admin_users(id);
+
+
+-- Completed on 2025-11-26 18:55:21
 
 --
 -- PostgreSQL database dump complete
 --
 
-\unrestrict LhlE6bco3e9jRTVdgd71cMRE9wmfQfG25zfGDlEHfejfIQyuYy3J2WxTMxdgJod
+\unrestrict aW4HN1Md706riHhUsMWTCVP22MYu5iNCyVgbUMWXscNAemi2O4QNZhki9AnlUHA
 
