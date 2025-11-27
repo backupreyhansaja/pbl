@@ -2,12 +2,12 @@
 -- PostgreSQL database dump
 --
 
-\restrict aW4HN1Md706riHhUsMWTCVP22MYu5iNCyVgbUMWXscNAemi2O4QNZhki9AnlUHA
+\restrict YQfHq0tEVQZZWRPDkK5BzmaVCo3QtlcVmyEI427nC7CydXSeT4Tk4sGS1RZj36d
 
 -- Dumped from database version 15.14
 -- Dumped by pg_dump version 15.14
 
--- Started on 2025-11-26 18:55:21
+-- Started on 2025-11-26 20:34:47
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -431,46 +431,6 @@ CREATE TABLE public.struktur_organisasi (
     urutan integer DEFAULT 0,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
--- Table Scope
-CREATE TABLE scope (
-    id SERIAL PRIMARY KEY,
-    judul VARCHAR(255) NOT NULL,
-    gambar VARCHAR(255) NOT NULL,
-    deskripsi TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-
--- Table Blueprint
-CREATE TABLE blueprint (
-    id SERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    description TEXT NOT NULL,
-    image VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Contoh data untuk testing
-INSERT INTO Berita (judul, isi, deskripsi, gambar, kategori, tanggal) VALUES
-('Pembukaan Laboratorium Baru', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Laboratorium baru telah dibuka dengan fasilitas lengkap.', 'Laboratorium baru dengan fasilitas modern', NULL, 'Pengumuman', CURRENT_DATE),
-('Workshop Web Development', 'Workshop tentang web development akan diadakan minggu depan. Daftar segera!', 'Workshop gratis untuk mahasiswa', NULL, 'Event', CURRENT_DATE - INTERVAL ''5 days''),
-('Pelatihan AI dan Machine Learning', 'Pelatihan intensif mengenai kecerdasan buatan dan machine learning untuk mahasiswa tingkat akhir.', 'Pelatihan AI selama 2 minggu', NULL, 'Pelatihan', CURRENT_DATE - INTERVAL ''10 days'');
-
--- Insert default admin user (password: admin123)
-INSERT INTO admin_users (username, password, email, full_name) 
-VALUES ('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin@lab.ac.id', 'Administrator');
-INSERT INTO admin_users (username, password, email, full_name) 
-VALUES ('admin123', '$2y$12$tA01BRJ2AB/Fcok2ZdSpneExLlriCWESIYM3dLhpu/22uWbdka0ry', 'admin123@lab.ac.id', 'Administrator');
-
--- Insert default visi misi
-INSERT INTO visi_misi (visi, misi) VALUES (
-    'Menjadi laboratorium unggulan yang menghasilkan penelitian dan inovasi berkualitas tinggi dalam bidang teknologi informasi.',
-    '1. Menyediakan fasilitas laboratorium yang modern dan lengkap
-2. Mendukung kegiatan penelitian mahasiswa dan dosen
-3. Mengembangkan inovasi teknologi yang bermanfaat bagi masyarakat
-4. Menjalin kerjasama dengan industri dan institusi lain
-5. Meningkatkan kompetensi SDM di bidang teknologi informasi'
 );
 
 
@@ -708,6 +668,7 @@ COPY public.scope (id, title, description, icon, color, urutan, uploaded_by, cre
 3	Application Development	Designing and building desktop, web, and mobile applications for industrial and academic needs.	fa-solid fa-mobile-screen	#00B894	3	1	2025-11-26 08:39:54.023369	2025-11-26 08:39:54.023369
 4	Internet of Things & Applied Technologies	Integrating hardware and software to produce intelligent solutions.	fa-solid fa-microchip	#0984E3	4	1	2025-11-26 08:39:54.023369	2025-11-26 08:39:54.023369
 2	Artificial Intelligence	Analyze data, create machine learning models, and develop intelligent systems for decision-making.	fa-solid fa-book	#E84393	2	1	2025-11-26 08:39:54.023369	2025-11-26 08:46:58.301218
+5	tes	ddd	fa-solid fa-book	#E84393	0	1	2025-11-26 19:01:15.209356	2025-11-26 19:01:15.209356
 \.
 
 
@@ -814,7 +775,7 @@ SELECT pg_catalog.setval('public.mahasiswa_id_seq', 1, false);
 -- Name: scope_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.scope_id_seq', 4, true);
+SELECT pg_catalog.setval('public.scope_id_seq', 5, true);
 
 
 --
@@ -997,11 +958,11 @@ ALTER TABLE ONLY public.scope
     ADD CONSTRAINT scope_uploaded_by_fkey FOREIGN KEY (uploaded_by) REFERENCES public.admin_users(id);
 
 
--- Completed on 2025-11-26 18:55:21
+-- Completed on 2025-11-26 20:34:47
 
 --
 -- PostgreSQL database dump complete
 --
 
-\unrestrict aW4HN1Md706riHhUsMWTCVP22MYu5iNCyVgbUMWXscNAemi2O4QNZhki9AnlUHA
+\unrestrict YQfHq0tEVQZZWRPDkK5BzmaVCo3QtlcVmyEI427nC7CydXSeT4Tk4sGS1RZj36d
 

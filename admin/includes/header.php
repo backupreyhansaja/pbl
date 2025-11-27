@@ -75,6 +75,14 @@
                     <i class="fas fa-sitemap w-6"></i>
                     <span>Struktur Organisasi</span>
                 </a>
+                <a href="scope.php" class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-purple-50 transition <?php echo basename($_SERVER['PHP_SELF']) == 'scope.php' ? 'sidebar-active' : 'text-gray-700'; ?>">
+                    <i class="fas fa-magnifying-glass w-6"></i>
+                    <span>Scope</span>
+                </a>
+                <a href="blueprint.php" class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-purple-50 transition <?php echo basename($_SERVER['PHP_SELF']) == 'blueprint.php' ? 'sidebar-active' : 'text-gray-700'; ?>">
+                    <i class="fas fa-book w-6"></i>
+                    <span>Blueprint</span>
+                </a>
                 <a href="staff.php" class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-purple-50 transition <?php echo basename($_SERVER['PHP_SELF']) == 'staff.php' ? 'sidebar-active' : 'text-gray-700'; ?>">
                     <i class="fas fa-user-tie w-6"></i>
                     <span>Staff</span>
@@ -95,15 +103,6 @@
                     <i class="fas fa-envelope w-6"></i>
                     <span>Pesan Masuk</span>
                 </a>
-                <a href="scope.php" class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-purple-50 transition <?php echo basename($_SERVER['PHP_SELF']) == 'scope.php' ? 'sidebar-active' : 'text-gray-700'; ?>">
-                    <i class="fas fa-envelope w-6"></i>
-                    <span>Scope</span>
-                </a>
-                <a href="blueprint.php" class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-purple-50 transition <?php echo basename($_SERVER['PHP_SELF']) == 'blueprint.php' ? 'sidebar-active' : 'text-gray-700'; ?>">
-                    <i class="fas fa-envelope w-6"></i>
-                    <span>Blueprint</span>
-                </a>
-                
                 <div class="border-t border-gray-200 my-4"></div>
                 
                 <a href="logout.php" class="flex items-center px-4 py-3 rounded-lg text-red-600 hover:bg-red-50 transition">
