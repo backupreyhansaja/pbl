@@ -83,14 +83,14 @@
                     <i class="fas fa-book w-6"></i>
                     <span>Blueprint</span>
                 </a>
-                <a href="staff.php" class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-purple-50 transition <?php echo basename($_SERVER['PHP_SELF']) == 'staff.php' ? 'sidebar-active' : 'text-gray-700'; ?>">
+                <!-- <a href="staff.php" class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-purple-50 transition <?php echo basename($_SERVER['PHP_SELF']) == 'staff.php' ? 'sidebar-active' : 'text-gray-700'; ?>">
                     <i class="fas fa-user-tie w-6"></i>
                     <span>Staff</span>
                 </a>
                 <a href="mahasiswa.php" class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-purple-50 transition <?php echo basename($_SERVER['PHP_SELF']) == 'mahasiswa.php' ? 'sidebar-active' : 'text-gray-700'; ?>">
                     <i class="fas fa-user-graduate w-6"></i>
                     <span>Mahasiswa</span>
-                </a>
+                </a> -->
                 <a href="berita.php" class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-purple-50 transition <?php echo basename($_SERVER['PHP_SELF']) == 'berita.php' ? 'sidebar-active' : 'text-gray-700'; ?>">
                     <i class="fas fa-newspaper w-6"></i>
                     <span>Berita</span>
