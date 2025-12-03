@@ -492,6 +492,9 @@ CREATE SEQUENCE public.visi_misi_id_seq
 
 ALTER TABLE public.visi_misi_id_seq OWNER TO postgres;
 
+
+
+
 --
 -- TOC entry 3465 (class 0 OID 0)
 -- Dependencies: 216

@@ -1,5 +1,5 @@
 <?php
-// CRUD BERITA – DENGAN QUILL EDITOR – FULL FIX
+// CRUD BERITA – DENGAN QUILL EDITOR – FIXED (PostgreSQL + Stored Procedures)
 require_once 'includes/auth.php';
 require_once '../config/database.php';
 
@@ -14,8 +14,23 @@ $error = '';
 ---------------------------------*/
 if (isset($_POST['multi_delete']) && !empty($_POST['ids'])) {
     $ids = implode(',', array_map('intval', $_POST['ids']));
-    $db->query("DELETE FROM Berita WHERE id IN ($ids)");
-    $success = "Berita terpilih berhasil dihapus!";
+
+    // Ambil gambar yang akan dihapus (opsional hapus file)
+    $rows = $db->fetchAll($db->query("SELECT gambar FROM berita WHERE id IN ($ids)"));
+    if ($rows) {
+        foreach ($rows as $r) {
+            if (!empty($r['gambar'])) {
+                $path = __DIR__ . '/../' . $r['gambar'];
+                if (file_exists($path)) @unlink($path);
+            }
+        }
+    }
+
+    if ($db->query("DELETE FROM berita WHERE id IN ($ids)")) {
+        $success = "Berita terpilih berhasil dihapus!";
+    } else {
+        $error = "Gagal menghapus beberapa berita.";
+    }
 }
 
 /* -------------------------------
@@ -24,9 +39,16 @@ if (isset($_POST['multi_delete']) && !empty($_POST['ids'])) {
 if (isset($_GET['delete'])) {
     $id = (int) $_GET['delete'];
 
-    $check = $db->query("SELECT id FROM Berita WHERE id = $id LIMIT 1");
-    if ($db->numRows($check) > 0) {
-        if ($db->query("DELETE FROM Berita WHERE id = $id")) {
+    $check = $db->query("SELECT gambar FROM berita WHERE id = $id LIMIT 1");
+    $row = $db->fetch($check);
+    if ($row) {
+        // hapus file gambar jika ada
+        if (!empty($row['gambar'])) {
+            $path = __DIR__ . '/../' . $row['gambar'];
+            if (file_exists($path)) @unlink($path);
+        }
+
+        if ($db->query("DELETE FROM berita WHERE id = $id")) {
             $success = 'Berita berhasil dihapus!';
         } else {
             $error = 'Gagal menghapus berita!';
@@ -37,11 +59,12 @@ if (isset($_GET['delete'])) {
 }
 
 /* -------------------------------
-   ADD / EDIT
+   ADD / EDIT (gunakan stored procedures)
 ---------------------------------*/
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['form_type']) && $_POST['form_type'] === 'news_form') {
 
     $id = (int) ($_POST['id'] ?? 0);
+    // sanitize via wrapper escape (as used sebelumnya)
     $judul = $db->escape($_POST['judul'] ?? '');
     $isi = $db->escape($_POST['isi'] ?? ''); // QUILL HTML
     $deskripsi = $db->escape($_POST['deskripsi'] ?? '');
@@ -55,47 +78,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     /* UPLOAD FILE */
     if (!$error && isset($_FILES['gambar']) && $_FILES['gambar']['error'] === 0) {
-
         $allowed = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
-        if (!in_array($_FILES['gambar']['type'], $allowed)) {
+        $finfoType = mime_content_type($_FILES['gambar']['tmp_name'] ?? '');
+        if (!in_array($finfoType, $allowed)) {
             $error = 'File harus berupa gambar (jpg, png, webp)';
         } else {
-            $uploadDir = '../uploads/berita/';
+            $uploadDir = __DIR__ . '/../uploads/berita/';
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir, 0777, true);
             }
 
-            $fileName = time() . '_' . basename($_FILES['gambar']['name']);
-            $targetPath = $uploadDir . $fileName;
+            $safeName = time() . '_' . preg_replace('/[^a-zA-Z0-9_\.-]/', '_', basename($_FILES['gambar']['name']));
+            $targetPath = $uploadDir . $safeName;
 
             if (move_uploaded_file($_FILES['gambar']['tmp_name'], $targetPath)) {
-                $gambar = 'uploads/berita/' . $fileName;
+                $gambar = 'uploads/berita/' . $safeName;
             } else {
                 $error = 'Gagal upload gambar';
             }
         }
     }
 
-    /* INSERT / UPDATE */
+    /* INSERT / UPDATE via stored procedure (PostgreSQL) */
     if (!$error) {
         if ($id > 0) {
-
-            $check = $db->query("SELECT id FROM Berita WHERE id = $id LIMIT 1");
-            if ($db->numRows($check) == 0) {
+            // pastikan record ada
+            $check = $db->query("SELECT id FROM berita WHERE id = $id LIMIT 1");
+            $exists = $db->fetch($check);
+            if (!$exists) {
                 $error = 'Data berita tidak ditemukan!';
             } else {
-                $sql = "UPDATE Berita SET 
-                        judul = '$judul',
-                        isi = '$isi',
-                        deskripsi = '$deskripsi',
-                        kategori = '$kategori',
-                        tanggal = '$tanggal'";
+                // Jika gambar kosong, kirim NULL sehingga SP akan mempertahankan gambar lama
+                $gambar_sql = ($gambar !== '') ? "'" . $db->escape($gambar) . "'" : "NULL";
 
-                if ($gambar) {
-                    $sql .= ", gambar = '$gambar'";
-                }
-
-                $sql .= ", updated_at = CURRENT_TIMESTAMP WHERE id = $id";
+                $sql = "CALL update_berita(
+                    $id,
+                    '" . $judul . "',
+                    '" . $isi . "',
+                    '" . $deskripsi . "',
+                    $gambar_sql,
+                    '" . $kategori . "',
+                    '" . $tanggal . "'
+                )";
 
                 if ($db->query($sql)) {
                     $success = 'Berita berhasil diupdate!';
@@ -104,11 +128,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
         } else {
+            // INSERT
+            $admin_id = (int) $_SESSION['admin_id'];
 
-            $admin_id = $_SESSION['admin_id'];
-
-            $sql = "INSERT INTO Berita (judul, isi, deskripsi, gambar, kategori, tanggal, uploaded_by)
-                    VALUES ('$judul', '$isi', '$deskripsi', '$gambar', '$kategori', '$tanggal', '$admin_id')";
+            $sql = "CALL insert_berita(
+                '" . $judul . "',
+                '" . $isi . "',
+                '" . $deskripsi . "',
+                '" . $db->escape($gambar) . "',
+                '" . $kategori . "',
+                '" . $tanggal . "',
+                $admin_id
+            )";
 
             if ($db->query($sql)) {
                 $success = 'Berita berhasil ditambahkan!';
@@ -124,14 +155,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ---------------------------------*/
 $perPage = 5;
 $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
+if ($page < 1) $page = 1;
 $offset = ($page - 1) * $perPage;
 
-$countResult = $db->query("SELECT COUNT(*) AS total FROM Berita");
+$countResult = $db->query("SELECT COUNT(*) AS total FROM berita");
 $countRow = $db->fetch($countResult);
-$totalRows = $countRow['total'];
-$totalPages = ceil($totalRows / $perPage);
+$totalRows = (int) ($countRow['total'] ?? 0);
+$totalPages = ($totalRows > 0) ? ceil($totalRows / $perPage) : 1;
 
-$result = $db->query("SELECT * FROM Berita ORDER BY tanggal DESC, created_at DESC LIMIT $perPage OFFSET $offset");
+$result = $db->query("SELECT * FROM berita ORDER BY tanggal DESC, created_at DESC LIMIT $perPage OFFSET $offset");
 $data = $db->fetchAll($result);
 
 /* -------------------------------
@@ -140,10 +172,8 @@ $data = $db->fetchAll($result);
 $editData = null;
 if (isset($_GET['edit'])) {
     $editId = (int) $_GET['edit'];
-    $editResult = $db->query("SELECT * FROM Berita WHERE id = $editId LIMIT 1");
-    if ($db->numRows($editResult) > 0) {
-        $editData = $db->fetch($editResult);
-    }
+    $editResult = $db->query("SELECT * FROM berita WHERE id = $editId LIMIT 1");
+    $editData = $db->fetch($editResult) ?: null;
 }
 
 include 'includes/header.php';
@@ -152,21 +182,23 @@ include 'includes/header.php';
 <!-- ALERTS -->
 <?php if ($success): ?>
     <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6 rounded">
-        <p class="text-green-700"><?= $success ?></p>
-    </div><?php endif; ?>
+        <p class="text-green-700"><?= htmlspecialchars($success) ?></p>
+    </div>
+<?php endif; ?>
+
 <?php if ($error): ?>
     <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded">
-        <p class="text-red-700"><?= $error ?></p>
-    </div><?php endif; ?>
+        <p class="text-red-700"><?= htmlspecialchars($error) ?></p>
+    </div>
+<?php endif; ?>
 
 <!-- FORM CRUD BERITA DENGAN QUILL -->
 <div class="bg-white rounded-xl shadow-md p-6 mb-6">
-
     <h3 class="text-lg font-bold text-gray-800 mb-4"><?= $editData ? 'Edit' : 'Tambah' ?> Berita</h3>
 
-    <form method="POST" enctype="multipart/form-data">
-
-        <?php if ($editData): ?><input type="hidden" name="id" value="<?= $editData['id'] ?>"><?php endif; ?>
+    <form id="newsForm" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="form_type" value="news_form">
+        <?php if ($editData): ?><input type="hidden" name="id" value="<?= (int)$editData['id'] ?>"><?php endif; ?>
 
         <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Judul *</label>
@@ -183,10 +215,8 @@ include 'includes/header.php';
         <!-- QUILL EDITOR -->
         <div class="mb-4">
             <label class="block text-gray-700 font-semibold mb-2">Isi Berita *</label>
-
             <div id="quillEditor" style="height:250px; background:white;" class="rounded border"></div>
-
-            <textarea name="isi" id="isi" style="display:none;"></textarea>
+            <textarea name="isi" id="isi" style="display:none;"><?= htmlspecialchars($editData['isi'] ?? '') ?></textarea>
         </div>
 
         <div class="grid md:grid-cols-3 gap-4 mb-4">
@@ -198,7 +228,7 @@ include 'includes/header.php';
                     $kategoriList = ['Pengumuman', 'Event', 'Pelatihan', 'Kegiatan', 'Penelitian', 'Prestasi'];
                     foreach ($kategoriList as $k) {
                         $sel = (($editData['kategori'] ?? '') == $k) ? 'selected' : '';
-                        echo "<option value='$k' $sel>$k</option>";
+                        echo "<option value=\"" . htmlspecialchars($k) . "\" $sel>" . htmlspecialchars($k) . "</option>";
                     }
                     ?>
                 </select>
@@ -212,13 +242,12 @@ include 'includes/header.php';
             </div>
 
             <div>
-                <label class="block text-gray-700 font-semibold mb-2">Gambar
-                    <?= $editData ? '(Opsional)' : '' ?></label>
+                <label class="block text-gray-700 font-semibold mb-2">Gambar <?= $editData ? '(Opsional)' : '' ?></label>
                 <input type="file" name="gambar" accept="image/*" class="w-full px-4 py-2 rounded-lg border" />
             </div>
         </div>
 
-        <?php if ($editData && $editData['gambar']): ?>
+        <?php if ($editData && !empty($editData['gambar'])): ?>
             <div class="mb-4">
                 <label class="block text-gray-700 font-semibold mb-2">Gambar Saat Ini</label>
                 <img src="../<?= htmlspecialchars($editData['gambar']) ?>" class="w-64 h-48 object-cover rounded-lg" />
@@ -229,48 +258,16 @@ include 'includes/header.php';
             <?php if ($editData): ?>
                 <a href="berita.php" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg">Batal</a>
             <?php endif; ?>
-<<<<<<< HEAD
-            <button type="submit" class="px-6 py-2 text-white rounded-lg hover:shadow-lg transition" style="background-color : blue">
-                <i class="fas fa-save mr-2"></i><?php echo $editData ? 'Update' : 'Simpan'; ?>
-=======
-
             <button type="submit" class="px-6 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg">
                 <i class="fas fa-save mr-2"></i><?= $editData ? 'Update' : 'Simpan' ?>
->>>>>>> 22b271e16a2dc87e776acef831a1b59e17c7cbea
             </button>
         </div>
-
     </form>
 </div>
 
-<<<<<<< HEAD
-<!-- Berita List -->
-<div class="bg-white rounded-xl shadow-md overflow-hidden">
-    <div class="overflow-x-auto">
-        <table class="w-full">
-            <thead class="text-white" style="background-color : blue" >
-                <tr>
-                    <th class="px-6 py-3 text-left text-sm font-semibold">Gambar</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold">Judul</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold">Kategori</th>
-                    <th class="px-6 py-3 text-left text-sm font-semibold">Tanggal</th>
-                    <th class="px-6 py-3 text-center text-sm font-semibold">Aksi</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-200">
-                <?php if ($data && count($data) > 0): ?>
-                    <?php foreach ($data as $row): ?>
-                        <tr class="hover:bg-gray-50 transition">
-                            <td class="px-6 py-4">
-                                <?php if ($row['gambar']): ?>
-                                    <img src="../<?php echo htmlspecialchars($row['gambar']); ?>" alt="<?php echo htmlspecialchars($row['judul']); ?>" class="w-20 h-16 object-cover rounded">
-                                <?php else: ?>
-                                    <div class="w-20 h-16 bg-gray-200 rounded flex items-center justify-center">
-                                        <i class="fas fa-newspaper text-gray-400"></i>
-=======
 <!-- LIST DATA BERITA -->
 <div class="bg-white rounded-xl shadow-md overflow-hidden mt-6">
-    <form method="POST">
+    <form id="listForm" method="POST">
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead class="bg-gradient-to-r from-purple-600 to-blue-600 text-white">
@@ -287,14 +284,12 @@ include 'includes/header.php';
                 </thead>
 
                 <tbody class="divide-y divide-gray-200">
-
                     <?php if ($data): ?>
                         <?php foreach ($data as $row): ?>
                             <tr class="hover:bg-gray-50 transition">
                                 <td class="px-6 py-4">
-                                    <?php if ($row['gambar']): ?>
-                                        <img src="../<?= htmlspecialchars($row['gambar']) ?>"
-                                            class="w-20 h-16 object-cover rounded">
+                                    <?php if (!empty($row['gambar'])): ?>
+                                        <img src="../<?= htmlspecialchars($row['gambar']) ?>" class="w-20 h-16 object-cover rounded">
                                     <?php else: ?>
                                         <div class="w-20 h-16 bg-gray-200 rounded flex items-center justify-center">
                                             <i class="fas fa-newspaper text-gray-400"></i>
@@ -305,8 +300,8 @@ include 'includes/header.php';
                                 <td class="px-6 py-4">
                                     <p class="font-semibold text-gray-800"><?= htmlspecialchars($row['judul']) ?></p>
                                     <p class="text-sm text-gray-500">
-                                        <?= htmlspecialchars(substr($row['deskripsi'] ?? '', 0, 60)) ?>
-                                        <?= strlen($row['deskripsi'] ?? '') > 60 ? '...' : '' ?>
+                                        <?= htmlspecialchars(mb_substr($row['deskripsi'] ?? '', 0, 60)) ?>
+                                        <?= (mb_strlen($row['deskripsi'] ?? '') > 60) ? '...' : '' ?>
                                     </p>
                                 </td>
 
@@ -322,21 +317,18 @@ include 'includes/header.php';
 
                                 <td class="px-6 py-4">
                                     <div class="flex justify-center space-x-2">
-                                        <a href="?edit=<?= $row['id'] ?>"
-                                            class="px-3 py-1 bg-blue-500 text-white rounded-lg text-sm">
+                                        <a href="?edit=<?= (int)$row['id'] ?>" class="px-3 py-1 bg-blue-500 text-white rounded-lg text-sm">
                                             <i class="fas fa-edit"></i>
                                         </a>
 
-                                        <a href="?delete=<?= $row['id'] ?>" onclick="return confirm('Hapus berita ini?')"
-                                            class="px-3 py-1 bg-red-500 text-white rounded-lg text-sm">
+                                        <a href="?delete=<?= (int)$row['id'] ?>" onclick="return confirm('Hapus berita ini?')" class="px-3 py-1 bg-red-500 text-white rounded-lg text-sm">
                                             <i class="fas fa-trash"></i>
                                         </a>
->>>>>>> 22b271e16a2dc87e776acef831a1b59e17c7cbea
                                     </div>
                                 </td>
 
                                 <td class="px-6 py-4 text-center">
-                                    <input type="checkbox" name="ids[]" value="<?= $row['id'] ?>">
+                                    <input type="checkbox" name="ids[]" value="<?= (int)$row['id'] ?>">
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -348,28 +340,24 @@ include 'includes/header.php';
                             </td>
                         </tr>
                     <?php endif; ?>
-
                 </tbody>
             </table>
         </div>
 
         <div class="p-4 border-t flex justify-between">
-            <button type="submit" name="multi_delete" class="px-4 py-2 bg-red-500 text-white rounded-lg"
-                onclick="return confirm('Hapus semua yang dipilih?')">
+            <button type="submit" name="multi_delete" class="px-4 py-2 bg-red-500 text-white rounded-lg" onclick="return confirm('Hapus semua yang dipilih?')">
                 Hapus Terpilih
             </button>
 
             <!-- Pagination -->
             <div class="flex space-x-2">
                 <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                    <a href="?page=<?= $i ?>"
-                        class="px-3 py-1 rounded-lg <?= $i == $page ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-700' ?>">
+                    <a href="?page=<?= $i ?>" class="px-3 py-1 rounded-lg <?= $i == $page ? 'bg-purple-600 text-white' : 'bg-gray-200 text-gray-700' ?>">
                         <?= $i ?>
                     </a>
                 <?php endfor; ?>
             </div>
         </div>
-
     </form>
 </div>
 
@@ -378,23 +366,24 @@ include 'includes/header.php';
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
 <script>
-    // Init Quill
+    // Init Quill (form specific)
     var quill = new Quill('#quillEditor', {
         theme: 'snow'
     });
 
-    // Preload isi untuk EDIT
+    // Preload isi untuk EDIT (safe injection via PHP json_encode)
     <?php if ($editData): ?>
-        quill.root.innerHTML = <?= json_encode($editData['isi']) ?>;
+    quill.root.innerHTML = <?= json_encode($editData['isi']) ?>;
     <?php endif; ?>
 
-    // On Submit → Kirim HTML ke textarea
-    document.querySelector("form").onsubmit = function () {
-        document.querySelector("#isi").value = quill.root.innerHTML;
-    };
+    // On Submit → Kirim HTML ke textarea hanya untuk newsForm
+    document.getElementById('newsForm').addEventListener('submit', function (e) {
+        document.getElementById('isi').value = quill.root.innerHTML;
+    });
 
+    // Check / Uncheck all for list form
     document.getElementById("checkAll").addEventListener("change", function () {
-        let checkboxes = document.querySelectorAll("input[name='ids[]']");
+        let checkboxes = document.querySelectorAll("#listForm input[name='ids[]']");
         checkboxes.forEach(cb => cb.checked = this.checked);
     });
 </script>

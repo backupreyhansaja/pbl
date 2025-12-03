@@ -8,104 +8,114 @@ $db = new Database();
 $success = '';
 $error = '';
 
-/* ================================
-   DELETE BLUEPRINT
-================================ */
+/* ========================================================
+   FETCH LIST ICONS (untuk dropdown)
+======================================================== */
+$iconsResult = $db->query("SELECT * FROM icons ORDER BY name ASC");
+$iconList = $db->fetchAll($iconsResult);
+
+/* ========================================================
+   DELETE DATA
+======================================================== */
 if (isset($_GET['delete'])) {
-    $id = (int)$_GET['delete'];
+    $id = (int) $_GET['delete'];
+
     if ($db->query("DELETE FROM blueprint WHERE id = $id")) {
         $success = "Blueprint berhasil dihapus!";
     } else {
-        $error = "Gagal menghapus data!";
+        $error = "Gagal menghapus blueprint!";
     }
 }
 
-/* ================================
-   INSERT / UPDATE BLUEPRINT
-================================ */
+/* ========================================================
+   INSERT / UPDATE DATA
+======================================================== */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $id          = isset($_POST['id']) ? (int)$_POST['id'] : 0;
-    $title       = $db->escape($_POST['title']);
-    $description = $db->escape($_POST['description']);
-    $icon        = $db->escape($_POST['icon']);
-    $color       = $db->escape($_POST['color']);
-    $urutan      = (int)($_POST['urutan'] ?? 0);
-    $uploaded_by = $_SESSION['admin_id'];
+    $id       = isset($_POST['id']) ? (int) $_POST['id'] : 0;
+    $title    = $db->escape($_POST['title']);
+    $desc     = $db->escape($_POST['description']);
+    $icon_id  = (int) $_POST['icon_id'];
+    $color    = $db->escape($_POST['color']);
+    $urutan   = (int) ($_POST['urutan'] ?? 0);
+    $adminId  = $_SESSION['admin_id'];
 
-    if (!$title || !$description || !$icon) {
-        $error = "Semua field wajib diisi!";
+    if (!$title || !$desc || !$icon_id) {
+        $error = "Judul, deskripsi, dan icon wajib diisi!";
     }
 
     if (!$error) {
+        // UPDATE
         if ($id > 0) {
-            // UPDATE
             $sql = "
-                UPDATE blueprint SET 
-                    title='$title',
-                    description='$description',
-                    icon='$icon',
-                    color='$color',
-                    urutan=$urutan,
-                    updated_at=CURRENT_TIMESTAMP
-                WHERE id=$id
+                UPDATE blueprint SET
+                    title = '$title',
+                    description = '$desc',
+                    icon_id = $icon_id,
+                    color = '$color',
+                    urutan = $urutan,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = $id
             ";
-        } else {
-            // INSERT
+        }
+        // INSERT
+        else {
             $sql = "
-                INSERT INTO blueprint (title, description, icon, color, urutan, uploaded_by)
-                VALUES ('$title', '$description', '$icon', '$color', $urutan, $uploaded_by)
+                INSERT INTO blueprint (title, description, icon_id, color, urutan, uploaded_by)
+                VALUES ('$title', '$desc', $icon_id, '$color', $urutan, $adminId)
             ";
         }
 
         if ($db->query($sql)) {
-            $success = "Blueprint berhasil disimpan!";
+            $success = $id > 0 ? "Blueprint berhasil diupdate!" : "Blueprint berhasil ditambahkan!";
         } else {
-            $error = "Gagal menyimpan blueprint!";
+            $error = "Gagal menyimpan data!";
         }
     }
 }
 
-/* ================================
-   FETCH ALL BLUEPRINT
-================================ */
-$result = $db->query("SELECT b.*, a.full_name AS uploader 
-                      FROM blueprint b
-                      LEFT JOIN admin_users a ON b.uploaded_by = a.id
-                      ORDER BY urutan ASC, id DESC");
+/* ========================================================
+   FETCH DATA BLUEPRINT + JOIN ICONS
+======================================================== */
+$result = $db->query("
+    SELECT b.*, i.icon_class, a.full_name AS uploader
+    FROM blueprint b
+    LEFT JOIN icons i ON b.icon_id = i.id
+    LEFT JOIN admin_users a ON b.uploaded_by = a.id
+    ORDER BY urutan ASC, created_at DESC
+");
+
 $data = $db->fetchAll($result);
 
-/* ================================
-   EDIT DATA
-================================ */
+/* EDIT DATA */
 $editData = null;
 if (isset($_GET['edit'])) {
-    $id = (int)$_GET['edit'];
-    $res = $db->query("SELECT * FROM blueprint WHERE id = $id LIMIT 1");
+    $editId = (int) $_GET['edit'];
+    $res = $db->query("SELECT * FROM blueprint WHERE id = $editId LIMIT 1");
     $editData = $db->fetch($res);
 }
 
 include 'includes/header.php';
 ?>
 
-<!-- SUCCESS -->
+<!-- ALERTS -->
 <?php if ($success): ?>
-<div class="bg-green-50 border-l-4 border-green-600 p-4 mb-6 rounded">
+<div class="bg-green-50 border-l-4 border-green-500 p-4 rounded mb-6">
     <p class="text-green-700"><?= $success ?></p>
 </div>
 <?php endif; ?>
 
-<!-- ERROR -->
 <?php if ($error): ?>
-<div class="bg-red-50 border-l-4 border-red-600 p-4 mb-6 rounded">
+<div class="bg-red-50 border-l-4 border-red-500 p-4 rounded mb-6">
     <p class="text-red-700"><?= $error ?></p>
 </div>
 <?php endif; ?>
 
+
 <!-- FORM -->
-<div class="bg-white rounded-xl shadow-md p-6 mb-6">
-    <h3 class="text-lg font-bold mb-4 text-gray-800">
-        <?= $editData ? 'Edit Blueprint' : 'Tambah Blueprint' ?>
+<div class="bg-white rounded-xl shadow-md p-6 mb-8">
+    <h3 class="text-lg font-bold mb-4">
+        <?= $editData ? "Edit Blueprint" : "Tambah Blueprint" ?>
     </h3>
 
     <form method="POST">
@@ -114,90 +124,84 @@ include 'includes/header.php';
         <?php endif; ?>
 
         <div class="mb-4">
-            <label class="block mb-2 font-semibold text-gray-700">Judul *</label>
+            <label class="font-semibold">Judul *</label>
             <input type="text" name="title" required
                    value="<?= htmlspecialchars($editData['title'] ?? '') ?>"
-                   class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-300">
+                   class="w-full p-2 border rounded-lg">
         </div>
 
         <div class="mb-4">
-            <label class="block mb-2 font-semibold text-gray-700">Deskripsi *</label>
+            <label class="font-semibold">Deskripsi *</label>
             <textarea name="description" rows="3" required
-                      class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-purple-300"><?= htmlspecialchars($editData['description'] ?? '') ?></textarea>
+                      class="w-full p-2 border rounded-lg"><?= htmlspecialchars($editData['description'] ?? '') ?></textarea>
         </div>
 
         <div class="mb-4">
-            <label class="block mb-2 font-semibold text-gray-700">Icon (FontAwesome) *</label>
-            <input type="text" name="icon" required
-                   placeholder="misal: fa-solid fa-brain"
-                   value="<?= htmlspecialchars($editData['icon'] ?? '') ?>"
-                   class="w-full px-4 py-2 border rounded-lg">
+            <label class="font-semibold">Pilih Icon *</label>
+            <select name="icon_id" class="w-full p-2 border rounded-lg" required>
+                <option value="">-- Pilih Icon --</option>
+                <?php foreach ($iconList as $icon): ?>
+                    <option value="<?= $icon['id'] ?>"
+                        <?= isset($editData['icon_id']) && $editData['icon_id'] == $icon['id'] ? 'selected' : '' ?>>
+                        <?= $icon['name'] ?> (<?= $icon['icon_class'] ?>)
+                    </option>
+                <?php endforeach; ?>
+            </select>
         </div>
 
-        <div class="mb-4">
-            <label class="block mb-2 font-semibold text-gray-700">Warna Card</label>
-            <input type="color" name="color"
-                   value="<?= htmlspecialchars($editData['color'] ?? '#6C5CE7') ?>"
-                   class="w-20 h-10 border rounded">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div>
+                <label class="font-semibold">Warna</label> <br>
+                <input type="color" name="color"
+                       value="<?= htmlspecialchars($editData['color'] ?? '#6C5CE7') ?>"
+                       class="w-20 h-10 border rounded">
+            </div>
+
+            <div>
+                <label class="font-semibold">Urutan</label>
+                <input type="number" name="urutan"
+                       value="<?= htmlspecialchars($editData['urutan'] ?? 0) ?>"
+                       class="w-full p-2 border rounded-lg">
+            </div>
         </div>
 
-        <!-- <div class="mb-4">
-            <label class="block mb-2 font-semibold text-gray-700">Urutan</label>
-            <input type="number" name="urutan"
-                   value="<?= htmlspecialchars($editData['urutan'] ?? 0) ?>"
-                   class="w-full px-4 py-2 border rounded-lg">
-        </div> -->
-
-        <div class="flex justify-end space-x-2">
+        <div class="flex justify-end">
             <?php if ($editData): ?>
                 <a href="blueprint.php" class="px-4 py-2 bg-gray-400 text-white rounded-lg">Batal</a>
             <?php endif; ?>
-
-            <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-                Simpan
+            <button class="px-5 py-2 bg-blue-600 text-white rounded-lg">
+                <?= $editData ? 'Update' : 'Simpan' ?>
             </button>
         </div>
     </form>
 </div>
 
-<!-- LIST BLUEPRINT -->
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-<?php if ($data): ?>
-    <?php foreach ($data as $row): ?>
-        <div class="bg-white rounded-xl shadow-md p-5 hover:shadow-lg transition">
+<!-- GRID DISPLAY -->
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+<?php foreach ($data as $row): ?>
+    <div class="bg-white rounded-xl shadow-lg p-5 hover:shadow-xl transition">
 
-            <div class="w-16 h-16 rounded-full flex items-center justify-center text-white mb-4"
-                 style="background: <?= $row['color'] ?: '#6C5CE7' ?>">
-                <i class="<?= $row['icon'] ?> text-3xl"></i>
-            </div>
-
-            <h4 class="font-bold text-lg mb-1"><?= htmlspecialchars($row['title']) ?></h4>
-            <p class="text-gray-600 text-sm mb-3"><?= htmlspecialchars($row['description']) ?></p>
-
-            <p class="text-xs text-gray-400 mb-3">
-                Uploaded by: <?= htmlspecialchars($row['uploader'] ?? 'Unknown') ?>
-            </p>
-
-            <div class="flex space-x-2">
-                <a href="?edit=<?= $row['id'] ?>" 
-                   class="flex-1 text-center py-2 bg-blue-500 text-white rounded-lg">
-                    Edit
-                </a>
-
-                <a href="?delete=<?= $row['id'] ?>"
-                   onclick="return confirm('Yakin ingin menghapus?')"
-                   class="flex-1 text-center py-2 bg-red-500 text-white rounded-lg">
-                    Hapus
-                </a>
-            </div>
-
+        <div class="text-5xl mb-4" style="color: <?= $row['color'] ?>;">
+            <i class="<?= htmlspecialchars($row['icon_class']) ?>"></i>
         </div>
-    <?php endforeach; ?>
-<?php else: ?>
-    <div class="col-span-full text-center py-10 bg-white rounded-xl shadow">
-        <p class="text-gray-500 text-lg">Belum ada data blueprint</p>
+
+        <h4 class="font-bold text-lg mb-2"><?= htmlspecialchars($row['title']) ?></h4>
+        <p class="text-gray-600 mb-3"><?= htmlspecialchars($row['description']) ?></p>
+
+        <p class="text-xs text-gray-500 mb-2">
+            Diunggah oleh: <b><?= $row['uploader'] ?: 'Unknown' ?></b>
+        </p>
+
+        <div class="flex space-x-2">
+            <a href="?edit=<?= $row['id'] ?>" 
+               class="flex-1 px-3 py-2 bg-blue-500 text-white rounded-lg text-center">Edit</a>
+
+            <a href="?delete=<?= $row['id'] ?>"
+               onclick="return confirm('Hapus data ini?')"
+               class="flex-1 px-3 py-2 bg-red-500 text-white rounded-lg text-center">Hapus</a>
+        </div>
     </div>
-<?php endif; ?>
+<?php endforeach; ?>
 </div>
 
 <?php include 'includes/footer.php'; ?>

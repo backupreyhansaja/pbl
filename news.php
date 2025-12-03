@@ -17,10 +17,7 @@ $totalPages = max(1, ceil($totalData / $perPage));
 
 /* AMBIL BERITA PER PAGE */
 $sql = "
-    SELECT b.*, a.full_name AS uploader
-    FROM Berita b
-    LEFT JOIN admin_users a ON b.uploaded_by = a.id
-    ORDER BY tanggal DESC, created_at DESC
+    select * from view_berita
     LIMIT $perPage OFFSET $offset
 ";
 

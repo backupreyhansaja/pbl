@@ -6,8 +6,7 @@ $pageTitle = 'Dashboard';
 $db = new Database();
 
 // Get statistics
-$staffCount = pg_num_rows($db->query("SELECT id FROM staff"));
-$mahasiswaCount = pg_num_rows($db->query("SELECT id FROM mahasiswa"));
+$staffCount = pg_num_rows($db->query("SELECT id FROM dosen_detail"));
 $beritaCount = pg_num_rows($db->query("SELECT id FROM Berita"));
 $galleryCount = pg_num_rows($db->query("SELECT id FROM gallery"));
 $messagesCount = pg_num_rows($db->query("SELECT id FROM contact_messages WHERE is_read = FALSE"));
@@ -47,21 +46,6 @@ include 'includes/header.php';
         </a>
     </div>
     
-    <!-- Mahasiswa Card -->
-    <div class="bg-white rounded-xl shadow-md p-4 md:p-6 hover:shadow-lg transition transform hover:scale-105 duration-200">
-        <div class="flex items-center justify-between mb-3 md:mb-4">
-            <div class="flex-1 min-w-0">
-                <p class="text-gray-600 text-xs md:text-sm mb-1 truncate">Total Mahasiswa</p>
-                <h3 class="text-2xl md:text-3xl font-bold text-gray-800"><?php echo $mahasiswaCount; ?></h3>
-            </div>
-            <div class="w-12 h-12 md:w-14 md:h-14 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 ml-3">
-                <i class="fas fa-user-graduate text-green-600 text-xl md:text-2xl"></i>
-            </div>
-        </div>
-        <a href="mahasiswa.php" class="text-green-600 text-xs md:text-sm inline-flex items-center hover:underline">
-            Lihat Detail <i class="fas fa-arrow-right ml-1"></i>
-        </a>
-    </div>
     
     <!-- Berita Card -->
     <div class="bg-white rounded-xl shadow-md p-4 md:p-6 hover:shadow-lg transition transform hover:scale-105 duration-200">

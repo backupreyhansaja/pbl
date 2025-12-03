@@ -8,9 +8,15 @@ $db = new Database();
 $success = '';
 $error = '';
 
-/* ======================================
+/* ========================================================
+   FETCH LIST ICONS (dropdown)
+======================================================== */
+$iconsResult = $db->query("SELECT * FROM icons ORDER BY name ASC");
+$iconList = $db->fetchAll($iconsResult);
+
+/* ========================================================
    DELETE DATA
-====================================== */
+======================================================== */
 if (isset($_GET['delete'])) {
     $id = (int) $_GET['delete'];
 
@@ -21,20 +27,20 @@ if (isset($_GET['delete'])) {
     }
 }
 
-/* ======================================
+/* ========================================================
    INSERT / UPDATE DATA
-====================================== */
+======================================================== */
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $id      = isset($_POST['id']) ? (int) $_POST['id'] : 0;
     $title   = $db->escape($_POST['title']);
     $desc    = $db->escape($_POST['description']);
-    $icon    = $db->escape($_POST['icon']);
+    $icon_id = (int) $_POST['icon_id'];
     $color   = $db->escape($_POST['color']);
     $urutan  = (int) ($_POST['urutan'] ?? 0);
     $adminId = $_SESSION['admin_id'];
 
-    if (!$title || !$desc || !$icon) {
+    if (!$title || !$desc || !$icon_id) {
         $error = "Judul, deskripsi, dan icon wajib diisi!";
     }
 
@@ -45,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 UPDATE scope SET
                     title = '$title',
                     description = '$desc',
-                    icon = '$icon',
+                    icon_id = $icon_id,
                     color = '$color',
                     urutan = $urutan,
                     updated_at = CURRENT_TIMESTAMP
@@ -55,8 +61,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // INSERT
         else {
             $sql = "
-                INSERT INTO scope (title, description, icon, color, urutan, uploaded_by)
-                VALUES ('$title', '$desc', '$icon', '$color', $urutan, $adminId)
+                INSERT INTO scope (title, description, icon_id, color, urutan, uploaded_by)
+                VALUES ('$title', '$desc', $icon_id, '$color', $urutan, $adminId)
             ";
         }
 
@@ -68,17 +74,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-/* ======================================
-   FETCH DATA
-====================================== */
-$result = $db->query("SELECT s.*, a.full_name AS uploader 
-                      FROM scope s 
-                      LEFT JOIN admin_users a ON s.uploaded_by = a.id
-                      ORDER BY urutan ASC, created_at DESC");
+/* ========================================================
+   FETCH DATA SCOPE + JOIN ICONS
+======================================================== */
+$result = $db->query("
+    SELECT s.*, i.icon_class, a.full_name AS uploader
+    FROM scope s
+    LEFT JOIN icons i ON s.icon_id = i.id
+    LEFT JOIN admin_users a ON s.uploaded_by = a.id
+    ORDER BY urutan ASC, created_at DESC
+");
 
 $data = $db->fetchAll($result);
 
-/* Get data untuk edit */
+/* FETCH DATA EDIT */
 $editData = null;
 if (isset($_GET['edit'])) {
     $editId = (int) $_GET['edit'];
@@ -127,27 +136,32 @@ include 'includes/header.php';
         </div>
 
         <div class="mb-4">
-            <label class="font-semibold">Icon (FontAwesome / Feather) *</label>
-            <input type="text" name="icon" required
-                   placeholder="misal: fa-solid fa-brain"
-                   value="<?= htmlspecialchars($editData['icon'] ?? '') ?>"
-                   class="w-full p-2 border rounded-lg">
+            <label class="font-semibold">Pilih Icon *</label>
+            <select name="icon_id" class="w-full p-2 border rounded-lg" required>
+                <option value="">-- Pilih Icon --</option>
+                <?php foreach ($iconList as $icon): ?>
+                    <option value="<?= $icon['id'] ?>"
+                        <?= isset($editData['icon_id']) && $editData['icon_id'] == $icon['id'] ? 'selected' : '' ?>>
+                        <?= $icon['name'] ?> (<?= $icon['icon_class'] ?>)
+                    </option>
+                <?php endforeach; ?>
+            </select>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             <div>
-                <label class="font-semibold">Warna (Hex)</label> <br>
+                <label class="font-semibold">Warna</label> <br>
                 <input type="color" name="color"
-                   value="<?= htmlspecialchars($editData['color'] ?? '#6C5CE7') ?>"
-                   class="w-20 h-10 border rounded">
+                       value="<?= htmlspecialchars($editData['color'] ?? '#6C5CE7') ?>"
+                       class="w-20 h-10 border rounded">
             </div>
 
-            <!-- <div>
+            <div>
                 <label class="font-semibold">Urutan</label>
                 <input type="number" name="urutan"
                        value="<?= htmlspecialchars($editData['urutan'] ?? 0) ?>"
                        class="w-full p-2 border rounded-lg">
-            </div> -->
+            </div>
         </div>
 
         <div class="flex justify-end">
@@ -165,10 +179,9 @@ include 'includes/header.php';
 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 <?php foreach ($data as $row): ?>
     <div class="bg-white rounded-xl shadow-lg p-5 hover:shadow-xl transition">
-        
-        <div class="text-5xl mb-4 <?= $row['color'] ? '' : 'text-purple-600' ?>"
-             style="color: <?= $row['color'] ?>;">
-            <i class="<?= htmlspecialchars($row['icon']) ?>"></i>
+
+        <div class="text-5xl mb-4" style="color: <?= $row['color'] ?>;">
+            <i class="<?= htmlspecialchars($row['icon_class']) ?>"></i>
         </div>
 
         <h4 class="font-bold text-lg mb-2"><?= $row['title'] ?></h4>

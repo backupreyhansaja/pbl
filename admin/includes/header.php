@@ -71,10 +71,6 @@
                     <i class="fas fa-book w-6"></i>
                     <span>Sejarah</span>
                 </a>
-                <a href="struktur.php" class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-purple-50 transition <?php echo basename($_SERVER['PHP_SELF']) == 'struktur.php' ? 'sidebar-active' : 'text-gray-700'; ?>">
-                    <i class="fas fa-sitemap w-6"></i>
-                    <span>Struktur Organisasi</span>
-                </a>
                 <a href="scope.php" class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-purple-50 transition <?php echo basename($_SERVER['PHP_SELF']) == 'scope.php' ? 'sidebar-active' : 'text-gray-700'; ?>">
                     <i class="fas fa-magnifying-glass w-6"></i>
                     <span>Scope</span>
@@ -83,14 +79,10 @@
                     <i class="fas fa-book w-6"></i>
                     <span>Blueprint</span>
                 </a>
-                <!-- <a href="staff.php" class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-purple-50 transition <?php echo basename($_SERVER['PHP_SELF']) == 'staff.php' ? 'sidebar-active' : 'text-gray-700'; ?>">
+                <a href="dosen.php" class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-purple-50 transition <?php echo basename($_SERVER['PHP_SELF']) == 'dosen.php' ? 'sidebar-active' : 'text-gray-700'; ?>">
                     <i class="fas fa-user-tie w-6"></i>
-                    <span>Staff</span>
+                    <span>Member</span>
                 </a>
-                <a href="mahasiswa.php" class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-purple-50 transition <?php echo basename($_SERVER['PHP_SELF']) == 'mahasiswa.php' ? 'sidebar-active' : 'text-gray-700'; ?>">
-                    <i class="fas fa-user-graduate w-6"></i>
-                    <span>Mahasiswa</span>
-                </a> -->
                 <a href="berita.php" class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-purple-50 transition <?php echo basename($_SERVER['PHP_SELF']) == 'berita.php' ? 'sidebar-active' : 'text-gray-700'; ?>">
                     <i class="fas fa-newspaper w-6"></i>
                     <span>Berita</span>
@@ -148,13 +140,17 @@
                     <i class="fas fa-sitemap w-6"></i>
                     <span>Struktur Organisasi</span>
                 </a>
-                <a href="staff.php" class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-purple-50 transition <?php echo basename($_SERVER['PHP_SELF']) == 'staff.php' ? 'sidebar-active' : 'text-gray-700'; ?>">
-                    <i class="fas fa-user-tie w-6"></i>
-                    <span>Staff</span>
+                <a href="scope.php" class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-purple-50 transition <?php echo basename($_SERVER['PHP_SELF']) == 'scope.php' ? 'sidebar-active' : 'text-gray-700'; ?>">
+                    <i class="fas fa-sitemap w-6"></i>
+                    <span>Scope</span>
                 </a>
-                <a href="mahasiswa.php" class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-purple-50 transition <?php echo basename($_SERVER['PHP_SELF']) == 'mahasiswa.php' ? 'sidebar-active' : 'text-gray-700'; ?>">
-                    <i class="fas fa-user-graduate w-6"></i>
-                    <span>Mahasiswa</span>
+                <a href="blueprint.php" class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-purple-50 transition <?php echo basename($_SERVER['PHP_SELF']) == 'blueprint.php' ? 'sidebar-active' : 'text-gray-700'; ?>">
+                    <i class="fas fa-sitemap w-6"></i>
+                    <span>Blueprint</span>
+                </a>
+                <a href="dosen.php" class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-purple-50 transition <?php echo basename($_SERVER['PHP_SELF']) == 'dosen.php' ? 'sidebar-active' : 'text-gray-700'; ?>">
+                    <i class="fas fa-user-tie w-6"></i>
+                    <span>Member</span>
                 </a>
                 <a href="berita.php" class="flex items-center px-4 py-3 mb-2 rounded-lg hover:bg-purple-50 transition <?php echo basename($_SERVER['PHP_SELF']) == 'berita.php' ? 'sidebar-active' : 'text-gray-700'; ?>">
                     <i class="fas fa-newspaper w-6"></i>
